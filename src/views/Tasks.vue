@@ -33,7 +33,7 @@ export default {
       errored: false
     }
   },
-  computed: mapGetters(['tasks']),
+  computed: mapGetters('tasks', ['tasks']),
   async created() {
     try {
       await this.getTasks();
@@ -44,6 +44,6 @@ export default {
       this.loading = false;
     }
   },
-  methods: mapActions(['getTasks'])
+  methods: mapActions('tasks', ['getTasks'])
 }
 </script>

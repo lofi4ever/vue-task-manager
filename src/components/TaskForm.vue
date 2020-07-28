@@ -35,7 +35,7 @@ export default {
   methods: {
     async addTask() {
       try {
-        await this.$store.dispatch('addTask', this.task);
+        await this.$store.dispatch('tasks/addTask', this.task);
       } catch(err) {
         console.log(err);
       } finally {

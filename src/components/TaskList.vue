@@ -1,6 +1,9 @@
 <template>
   <div>
-    <Task v-for="(task, index) in tasks" :task="task" :key="index"></Task>
+    <Task v-for="(task, index) in tasks"
+      :task="task" 
+      :key="index"
+      @remove="remove"></Task>
   </div>
 </template>
 
@@ -18,6 +21,11 @@ export default {
   data() {
     return {
       //
+    }
+  },
+  methods: {
+    remove(task) {
+      this.$store.dispatch('tasks/removeTask', task);
     }
   }
 }
