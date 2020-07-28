@@ -12,7 +12,7 @@ const userRouter = require('./user/user.router');
 const handler = express();
 
 handler
-  .use(jwt())
+  //.use(jwt())
   .use(function(req, res, next) { ///middleware
     //console.log('logger');
     next();
