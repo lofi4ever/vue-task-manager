@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Errors></Errors>
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
@@ -30,3 +31,14 @@
   }
 }
 </style>
+
+<script>
+  import Errors from './components/Errors';
+
+  export default {
+    name: 'App',
+    components: {
+      Errors
+    }
+  }
+</script>

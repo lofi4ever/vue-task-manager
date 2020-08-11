@@ -3,7 +3,8 @@
     <Task v-for="(task, index) in tasks"
       :task="task" 
       :key="index"
-      @remove="remove"></Task>
+      @remove="remove"
+      @edit="edit"></Task>
   </div>
 </template>
 
@@ -23,9 +24,13 @@ export default {
       //
     }
   },
+  inject: ['setTaskToEdit'],
   methods: {
     remove(task) {
       this.$store.dispatch('tasks/removeTask', task);
+    },
+    edit(task) {
+      this.setTaskToEdit(task);
     }
   }
 }

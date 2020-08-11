@@ -11,13 +11,22 @@
     <template v-else>
       <TaskList v-if="tasks.length" :tasks="tasks"></TaskList>
       <template v-else>task list is empty</template>
-      <TaskForm></TaskForm>
+      <template>
+        <TaskForm 
+        v-show="isFormShownComputed"
+        :task="currentTask" 
+        :action="currentAction"
+        @done="resetForm"></TaskForm>
+        <button v-if="isFormShown" @click="isFormShown = false">Close Form</button>
+        <button v-else @click="isFormShown = true">Add Task</button>
+      </template>
     </template>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import TaskModel from '../models/task.model'
 import TaskList from '../components/TaskList'
 import TaskForm from '../components/TaskForm'
 
@@ -30,10 +39,18 @@ export default {
   data() {
     return {
       loading: true,
-      errored: false
+      errored: false,
+      currentTask: new TaskModel(),
+      currentAction: 'add',
+      isFormShown: false
     }
   },
-  computed: mapGetters('tasks', ['tasks']),
+  computed: {
+    ...mapGetters('tasks', ['tasks']),
+    isFormShownComputed() {
+      return this.isFormShown || (!this.loading && !this.tasks.length);
+    }
+  },
   async created() {
     try {
       await this.getTasks();
@@ -44,6 +61,22 @@ export default {
       this.loading = false;
     }
   },
-  methods: mapActions('tasks', ['getTasks'])
+  methods: {
+    ...mapActions('tasks', ['getTasks']),
+    resetForm() {
+      this.currentTask = new TaskModel();
+      this.currentAction = 'add';
+    },
+    setTaskToEdit(task) {
+      this.currentTask = task;
+      this.currentAction = 'edit';
+      this.isFormShown = true;
+    }
+  },
+  provide() {
+    return {
+      setTaskToEdit: this.setTaskToEdit
+    }
+  }
 }
 </script>

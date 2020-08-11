@@ -1,6 +1,7 @@
 <template>
   <div>
-    <form action="" @submit.prevent="addTask">
+    <form action="" @submit.prevent>
+      <input type="hidden" v-if="task.id" v-model="task.id">
       <label>
         Name:
         <input type="text" v-model="task.name">
@@ -12,38 +13,39 @@
       <label>
         <input type="checkbox" v-model="task.isComplete"> Complete
       </label><br>
-      <button type="submit">Add task</button>
+      <button type="submit" @click="submit">{{ action === 'add' ? 'add task' : 'edit task' }}</button>
     </form>
   </div>
 </template>
 
 <script>
 
-const TaskModel = function() {
-  this.name = "";
-  this.description = "";
-  this.isComplete = false;
-};
-
 export default {
   name: 'TaskForm',
-  data() {
-    return {
-      task: new TaskModel
+  props: {
+    task: Object,
+    action: {
+      type: String,
+      default: 'add'
     }
   },
   methods: {
-    async addTask() {
+    async submit() {
       try {
-        await this.$store.dispatch('tasks/addTask', this.task);
+        if(this.action === 'add') {
+          await this.$store.dispatch('tasks/addTask', this.task);  
+        } else if(this.action === 'edit') {
+          await this.$store.dispatch('tasks/editTask', this.task);  
+        }
       } catch(err) {
         console.log(err);
+        this.$bus.$emit('error', {
+          message: 'failed to save task',
+          delay: 3000
+        });
       } finally {
-        this.clear();
+        this.$emit('done');
       }
-    },
-    clear() {
-      this.task = new TaskModel;
     }
   }
 }
